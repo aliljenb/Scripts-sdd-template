@@ -1,6 +1,6 @@
 ---
 name: spec-requirements
-description: Generate requirements.md for a new feature or bugfix.md for a bug, following the project's SDD template.
+description: SDD - Generate requirements.md for a new feature or bugfix.md for a bug, following the project's SDD template.
 argument-hint: [feature-name]
 disable-model-invocation: true      # only run when the user explicitly types /spec-requirements
 allowed-tools: Read Write Glob Grep # no Bash/Edit — this phase never touches code

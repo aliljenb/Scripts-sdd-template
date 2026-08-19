@@ -1,4 +1,5 @@
 ---
+name: spec-new
 description: SDD - Set up a new feature spec folder from the templates
 argument-hint: [feature-name]
 disable-model-invocation: true
