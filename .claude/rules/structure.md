@@ -64,7 +64,7 @@
 ## Conventions
 
 - All backend source code lives under `src/<python_module>/`
-- All backend source code lives under `frontend/src`
+- All frontend source code lives under `frontend/src`
 - Test files mirror the backend source tree
 - One spec directory per feature — specs are never shared across features
-- Steering documents always live directly under `steering/`
+- Steering documents live under `.claude/rules/`
