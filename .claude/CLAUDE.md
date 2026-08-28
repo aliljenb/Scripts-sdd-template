@@ -28,15 +28,13 @@ Full phase-gate rules: `.claude/rules/sdd-workflow.md`.
 
 Read these before working in this repo:
 
-- `.claude/rules/product.md` — what this product is and why (fill in per
-  project)
-- `.claude/rules/tech.md` — approved stack; ask before adding anything
-  not listed
-- `.claude/rules/structure.md` — repo layout and DDD directory
-  conventions
+- `.claude/rules/product.md` — what this product is and why (fill in per project)
+- `.claude/rules/tech.md` — approved stack; ask before adding anything not listed
+- `.claude/rules/structure.md` — repo layout and DDD directory conventions
 - `.claude/rules/sdd-workflow.md` — phase-gate rules
 - `.claude/rules/backend.md` — DDD/SRP rules for `src/**/*.py`
 - `.claude/rules/frontend.md` — SRP rules for `frontend/src/**/*`
+- `.claude/rules/testing.md` — testing strategy, including Playwright for applicable UI tests
 
 ## Principles
 
