@@ -1,6 +1,6 @@
 ---
 name: domain-model
-description: Ubiquitous language and bounded context map for this project. Load when writing design.md, implementing domain/application code, or discussing business rules.
+description: SDD - Ubiquitous language and bounded context map for this project. Load when writing design.md, implementing domain/application code, or discussing business rules.
 ---
 
 Read docs/domain/glossary.md and docs/domain/bounded-contexts.md before
