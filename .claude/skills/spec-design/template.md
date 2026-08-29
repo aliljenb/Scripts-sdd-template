@@ -15,6 +15,11 @@
 > Pure business logic. Zero framework/infra imports. Lives under
 > `src/<python_module>/domain/<aggregate_name>/`.
 
+- Bounded context:
+- New/changed aggregates:
+- New domain events:
+- Repository interface changes:
+
 ### Aggregates
 
 <!-- Name each aggregate and its aggregate root. One aggregate = one
@@ -62,6 +67,8 @@
 
 > Orchestrates domain objects. No framework code. Lives under
 > `src/<python_module>/application/<aggregate_name>/`.
+
+- Use cases:
 
 ### Commands (write use cases)
 
