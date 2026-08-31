@@ -28,8 +28,13 @@
 │   │   └── frontend.md                # path-scoped: frontend/src/**/*
 │   └── CLAUDE.md                      # short, top-level index/entry point
 ├── frontend/
+│   ├── public/                    # for images referenced by path/URL, not imported in components
 │   ├── src/
-│   └── package.json
+│   │   ├── assets/
+│   │   │   ├── icons/             # for icons imported directly into components
+│   │   │   └── images/            # for images imported directly into components
+│   │   └── components/
+│   └── package.json               # single source of truth for frontend dependencies
 ├── specs/
 │   ├── <feature-name-1>/
 │   │   ├── requirements.md
@@ -65,6 +70,9 @@
 
 - All backend source code lives under `src/<python_module>/`
 - All frontend source code lives under `frontend/src`
+- Frontend containers (data/state) are separated from presentational
+  components (rendering); API access and state management live in their
+  own modules, not inline in components — see `frontend.md`
 - Test files mirror the backend source tree
 - One spec directory per feature — specs are never shared across features
 - Steering documents live under `.claude/rules/`
