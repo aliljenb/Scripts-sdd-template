@@ -60,6 +60,7 @@
 │   │   ├── db/                     # ORM models, migrations, session management
 │   │   └── repositories/           # concrete repo implementations — the "adapters"
 │   └── api/                        # FastAPI routers, request/response schemas, DI wiring
+│       └── cli/                    # command-line entrypoints (e.g. cron bots) — driving adapters
 ├── tests/
 ├── .gitignore
 ├── pyproject.toml
