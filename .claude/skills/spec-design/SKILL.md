@@ -65,7 +65,7 @@ its job, split it before marking design.md Approved.
 - Never modify files in `src/` or `frontend/src/` while completing this
   skill — Design phase is planning-only, per
   `.claude/rules/sdd-workflow.md`.
-- Only write to `specs/$1/design.md`.
+- Only write to `specs/$1/design.md` and `docs/domain/glossary.md`.
 
 Read the file `specs/$1/design.md` and help me create or refine the design.
 Update `specs/$1/design.md` with the refined design, then remind the user
