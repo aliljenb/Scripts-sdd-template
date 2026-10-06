@@ -40,8 +40,8 @@ file order, one at a time.
 5. If you discover the task can't be implemented as written (design.md is
    wrong, missing detail, or contradicts requirements.md), stop and raise
    it with the user rather than improvising a divergent design. Record any
-   approved deviation in `specs/$1/implementation-notes.md` (see
-   `skills/implement-task/template.md`) — most tasks need no entry there.
+   approved deviation in `specs/$1/implementation-notes.md` — most tasks 
+   need no entry there.
 6. After implementing, run the project's checks on the changed files:
    `ruff check`, `mypy`, and `pytest` for the relevant test paths. Fix
    failures before moving on.
