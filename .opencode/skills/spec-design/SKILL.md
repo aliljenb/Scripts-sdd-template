@@ -1,19 +1,18 @@
 ---
 name: spec-design
 description: SDD - Generate design.md for a feature — a DDD domain model plus application/infrastructure/API layering — following the project's SDD template.
-argument-hint: [feature-name]
-disable-model-invocation: true      # only run when the user explicitly types /spec-design
-allowed-tools: Read Write Glob Grep # no Bash/Edit — this phase never touches code
 ---
 
-If not already existing, generate `specs/$1/design.md` using the template at
-`skills/spec-design/template.md`.
+> **Arguments:** `<feature-name>` is the first argument passed to the `/spec-design` command.
+
+If not already existing, generate `specs/<feature-name>/design.md` using the template at
+`.opencode/skills/spec-design/template.md`.
 
 ## Preconditions
 
-- If `specs/$1/requirements.md` does not exist, refuse and point the user to
-  `/spec-requirements $1` first. Do not create a design without requirements.
-- If `specs/$1/requirements.md` exists but its `## Status` checklist does not
+- If `specs/<feature-name>/requirements.md` does not exist, refuse and point the user to
+  `/spec-requirements <feature-name>` first. Do not create a design without requirements.
+- If `specs/<feature-name>/requirements.md` exists but its `## Status` checklist does not
   have `Approved` checked, stop and tell the user requirements must be
   approved before design can proceed. Do not proceed on an assumption that
   it's "close enough."
@@ -29,7 +28,7 @@ before drafting or changing design.md.
 - Ask one question at a time, or a small batch of tightly related ones.
 - Each question must offer 2-4 concrete, mutually exclusive multiple-choice
   options (plus the user can always answer "Other" with free text).
-- Use the `AskUserQuestion` tool so the options are clickable. Only fall
+- Use the `question` tool so the options are clickable. Only fall
   back to a lettered list (A/B/C/D) in chat if that tool isn't available.
 - Do not proceed to writing or editing design.md until blocking ambiguities
   are resolved. Minor, non-blocking assumptions can just be stated inline
@@ -40,12 +39,12 @@ before drafting or changing design.md.
 This project practices DDD. Every design.md must:
 
 - Derive the domain model directly from the user stories in
-  `specs/$1/requirements.md` — each noun/behavior in a story should map to
+  `specs/<feature-name>/requirements.md` — each noun/behavior in a story should map to
   an entity, value object, or domain event; do not invent domain concepts
   the requirements don't support.
 - Identify aggregates and their roots, and keep aggregate boundaries small
   — one aggregate per transactional consistency boundary, per
-  `.claude/rules/structure.md`'s domain/application/infrastructure/api
+  `.opencode/rules/structure.md`'s domain/application/infrastructure/api
   layering.
 - Keep the domain model free of framework or infrastructure concerns
   (no ORM, no HTTP, no I/O) — those belong in the Infrastructure and API
@@ -64,10 +63,10 @@ its job, split it before marking design.md Approved.
 
 - Never modify files in `src/` or `frontend/src/` while completing this
   skill — Design phase is planning-only, per
-  `.claude/rules/sdd-workflow.md`.
-- Only write to `specs/$1/design.md`, `docs/domain/glossary.md` and `docs/domain/bounded-contexts.md`.
+  `.opencode/rules/sdd-workflow.md`.
+- Only write to `specs/<feature-name>/design.md`, `docs/domain/glossary.md` and `docs/domain/bounded-contexts.md`.
 
-Read the file `specs/$1/design.md` and help me create or refine the design.
-Update `specs/$1/design.md` with the refined design, then remind the user
+Read the file `specs/<feature-name>/design.md` and help me create or refine the design.
+Update `specs/<feature-name>/design.md` with the refined design, then remind the user
 that design.md must be explicitly approved (Status: Approved) before
-`/spec-tasks $1` can run.
+`/spec-tasks <feature-name>` can run.

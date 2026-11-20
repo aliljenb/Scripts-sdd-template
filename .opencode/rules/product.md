@@ -1,7 +1,7 @@
 # Product
 
 > Fill this in when starting a new project from this template. Keep it
-> current — Claude reads this to understand *what* is being built and
+> current — the agent reads this to understand *what* is being built and
 > *why*, so requirements and design stay aligned with actual product
 > intent instead of being invented per-feature.
 

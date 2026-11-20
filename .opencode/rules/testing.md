@@ -4,4 +4,4 @@
 - Prefer Playwright over alternative browser automation tools.
 - UI acceptance criteria should be covered by Playwright tests where technically applicable.
 - Do not introduce another browser-testing framework without approval.
-- Do not use Claude in Chrome or browser automation for UI testing.
+- Do not use OpenCode's built-in `browser` tool, Claude in Chrome, or any other agent-driven browser automation for UI testing (both are denied in `opencode.json`).

@@ -1,32 +1,32 @@
 ---
 name: implement-task
 description: SDD - Implement one or more tasks from a feature's tasks.md, writing code that follows the approved design's domain model, DDD layering, and SRP.
-argument-hint: [feature-name] [task-reference]
-disable-model-invocation: true
-allowed-tools: Read Write Edit Glob Grep Bash(pytest:*) Bash(ruff:*) Bash(mypy:*) Bash(git:*)
 ---
 
-Implement task(s) for feature **$1** from `specs/$1/tasks.md`. If a second
+> **Arguments:** `<feature-name>` is the first argument passed to the `/implement-task` command;
+> `<task>` is the optional second argument (empty if not given).
+
+Implement task(s) for feature **<feature-name>** from `specs/<feature-name>/tasks.md`. If a second
 argument is given, treat it as the specific task (by checkbox text or line
 reference) to implement; otherwise implement the next unchecked task(s) in
 file order, one at a time.
 
 ## Preconditions
 
-- If `specs/$1/tasks.md` does not exist, refuse and point the user to
-  `/spec-tasks $1` first.
-- If `specs/$1/tasks.md` exists but its `## Status` checklist does not have
+- If `specs/<feature-name>/tasks.md` does not exist, refuse and point the user to
+  `/spec-tasks <feature-name>` first.
+- If `specs/<feature-name>/tasks.md` exists but its `## Status` checklist does not have
   `Approved` checked, stop and confirm with the user before implementing —
   do not silently build against an unapproved plan.
-- Re-read `specs/$1/design.md` before implementing anything; the task
+- Re-read `specs/<feature-name>/design.md` before implementing anything; the task
   file names files/functions, but design.md is the source of truth for
   behavior, invariants, and layering.
 
 ## Implementing a task
 
-1. Pick the next unchecked task (or the one named by `$2`).
+1. Pick the next unchecked task (or the one named by `<task>`).
 2. Implement exactly what it describes, in the exact file it names, per
-   `.claude/rules/structure.md`'s layout:
+   `.opencode/rules/structure.md`'s layout:
    - `domain/` code must stay free of framework/infrastructure imports.
    - `application/` code orchestrates domain objects only — no direct
      ORM/HTTP/I/O calls; those go through repository ports.
@@ -40,13 +40,13 @@ file order, one at a time.
 5. If you discover the task can't be implemented as written (design.md is
    wrong, missing detail, or contradicts requirements.md), stop and raise
    it with the user rather than improvising a divergent design. Record any
-   approved deviation in `specs/$1/implementation-notes.md` — most tasks 
+   approved deviation in `specs/<feature-name>/implementation-notes.md` — most tasks 
    need no entry there.
 6. After implementing, run the project's checks on the changed files:
    `ruff check`, `mypy`, and `pytest` for the relevant test paths. Fix
    failures before moving on.
 7. Check off the task's checkbox (and its test checkbox) in
-   `specs/$1/tasks.md` only once the code exists and checks pass.
+   `specs/<feature-name>/tasks.md` only once the code exists and checks pass.
 
 ## Restrictions
 

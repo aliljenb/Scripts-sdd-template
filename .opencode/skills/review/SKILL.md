@@ -1,13 +1,12 @@
 ---
 name: review
 description: SDD - Review a feature's implementation against its approved requirements.md/design.md/tasks.md — checks task completion, DDD layering purity, and SRP.
-argument-hint: [feature-name]
-disable-model-invocation: true
-allowed-tools: Read Glob Grep Bash(pytest:*) Bash(ruff:*) Bash(mypy:*) Bash(git diff:*) Bash(git log:*)
 ---
 
-Review the implementation of feature **$1** against its spec. Read
-`specs/$1/requirements.md`, `specs/$1/design.md`, and `specs/$1/tasks.md`
+> **Arguments:** `<feature-name>` is the first argument passed to the `/review` command.
+
+Review the implementation of feature **<feature-name>** against its spec. Read
+`specs/<feature-name>/requirements.md`, `specs/<feature-name>/design.md`, and `specs/<feature-name>/tasks.md`
 in full before looking at any code.
 
 This skill is read-only analysis — it reports findings, it does not edit
@@ -23,7 +22,7 @@ code or spec files.
 2. **Requirements coverage** — every acceptance criterion in
    requirements.md should be traceable to at least one task/test. Flag
    gaps.
-3. **DDD layering purity**, per `.claude/rules/structure.md`:
+3. **DDD layering purity**, per `.opencode/rules/structure.md`:
    - `domain/` files must import no framework/infrastructure packages
      (no ORM, no HTTP client, no framework request/response types).
    - `application/` files must not talk to the database/HTTP directly —

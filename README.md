@@ -1,6 +1,6 @@
 # sdd-template
 
-A template for Spec-Driven Development (SDD) with [Claude Code](https://claude.com/claude-code),
+A template for Spec-Driven Development (SDD) with [OpenCode](https://opencode.ai),
 in the style of AWS Kiro. It scaffolds a Python (backend) / React (frontend)
 project where every feature moves through an explicit, phase-gated
 workflow — requirements → design → tasks → implementation → review —
@@ -12,7 +12,7 @@ adherence to the Single Responsibility Principle (SRP).
 Each feature gets its own spec directory under `specs/<feature-name>/`
 containing `requirements.md`, `design.md`, and `tasks.md`. A phase file
 must be explicitly marked `Approved` before the next phase's command may
-run — Claude Code will refuse to skip ahead.
+run — the agent will refuse to skip ahead.
 
 | Step | Command | Produces |
 |------|---------|----------|
@@ -42,18 +42,20 @@ Backend code is organized into DDD layers, each with one job:
 
 Every design and its implementation are checked against the Single
 Responsibility Principle — each module/class should have exactly one
-reason to change. See `.claude/rules/backend.md` and
-`.claude/rules/frontend.md` for the enforced conventions.
+reason to change. See `.opencode/rules/backend.md` and
+`.opencode/rules/frontend.md` for the enforced conventions.
 
 ## Project structure
 
 ```
 <Project>/
-├── .claude/
-│   ├── skills/          # /spec-new, /spec-requirements, /spec-design,
+├── .opencode/
+│   ├── commands/         # /spec-new, /spec-requirements, /spec-design,
 │   │                     #   /spec-tasks, /implement-task, /review
-│   ├── rules/            # steering docs & phase-gate rules
-│   └── CLAUDE.md         # entry point / index
+│   ├── skills/           # one skill per command (+ domain-model)
+│   └── rules/            # steering docs & phase-gate rules
+├── AGENTS.md             # entry point / index
+├── opencode.json         # rule loading, permissions, per-phase agents
 ├── frontend/
 │   └── src/
 ├── specs/
@@ -69,14 +71,41 @@ reason to change. See `.claude/rules/backend.md` and
 └── tests/
 ```
 
-See `.claude/rules/structure.md` for the full layout and conventions, and
-`.claude/rules/tech.md` for the stack (Python 3.12+, pip, pytest, ruff,
+See `.opencode/rules/structure.md` for the full layout and conventions, and
+`.opencode/rules/tech.md` for the stack (Python 3.12+, pip, pytest, ruff,
 mypy).
 
 ## Getting started
 
-1. Fill in `.claude/rules/product.md` with the product you're actually
-   building (vision, users, goals, glossary) — Claude reads this before
+1. Fill in `.opencode/rules/product.md` with the product you're actually
+   building (vision, users, goals, glossary) — the agent reads this before
    drafting requirements or design so it doesn't invent product intent.
-2. Update `.claude/rules/tech.md` if the stack differs from the defaults.
+2. Update `.opencode/rules/tech.md` if the stack differs from the defaults.
 3. Run `/spec-new <feature-name>` to start your first feature.
+
+## How the workflow is enforced in OpenCode
+
+Each command in `.opencode/commands/` selects a dedicated agent and model,
+then inlines the skill of the same name from `.opencode/skills/` with
+OpenCode's shell injection (``!`cat .opencode/skills/<name>/SKILL.md` ``).
+The skill text is pasted in before the model runs, so loading it never
+depends on the model choosing to call the `skill` tool, and the skill files
+remain the single source of truth:
+
+| Command | Agent | Model | What the agent may change |
+|---------|-------|-------|---------------------------|
+| `/spec-new` | `sdd-spec-new` | `anthropic/claude-haiku-5-5` | `specs/**`; shell limited to `mkdir`, `cp`, `ls`, `test` |
+| `/spec-requirements` | `sdd-requirements` | `anthropic/claude-sonnet-5-5` | `specs/*/requirements.md` only; no shell |
+| `/spec-design` | `sdd-design` | `anthropic/claude-opus-5-5` | `specs/*/design.md`, `docs/domain/glossary.md`, `docs/domain/bounded-contexts.md`; no shell |
+| `/spec-tasks` | `sdd-tasks` | `anthropic/claude-sonnet-5-5` | `specs/*/tasks.md` only; no shell |
+| `/implement-task` | `sdd-implement` | `anthropic/claude-sonnet-5-5` | any file; `pytest`, `ruff`, `mypy`, `git` pre-approved, other shell asks |
+| `/review` | `sdd-review` | `anthropic/claude-opus-5-5` | nothing (read-only); `pytest`, `ruff`, `mypy`, `git diff`, `git log` pre-approved |
+
+- The phase skills are denied to every other agent (including `build` and
+  `plan`), so they only run when you type the command.
+- All rule files in `.opencode/rules/` load on every session via the
+  `instructions` entry in `opencode.json`.
+- `specs/**/prompt(s).txt` cannot be read, and the built-in `browser` tool
+  and any `claude-in-chrome` MCP tools are denied.
+- To use different models, edit the `model:` line in each command file
+  (format `provider/model`, optionally `#variant`).

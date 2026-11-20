@@ -1,6 +1,6 @@
 # Tech Stack
 
-> Claude will not introduce packages or tools not listed here without asking first.
+> The agent will not introduce packages or tools not listed here without asking first.
 
 ## Language
 

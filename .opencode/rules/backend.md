@@ -1,14 +1,11 @@
----
-paths:
-  - "src/**/*.py"
-  - "tests/**/*.py"
----
-
 # Backend Rules
 
+> **Scope:** these rules apply to files matching src/**/*.py, tests/**/*.py.
+> (OpenCode loads every rule file globally; ignore this file for other paths.)
+
 Applies to all Python code under `src/` and `tests/`. See
-`.claude/rules/structure.md` for the full directory layout and
-`.claude/rules/tech.md` for the tooling stack.
+`.opencode/rules/structure.md` for the full directory layout and
+`.opencode/rules/tech.md` for the tooling stack.
 
 ## Domain-Driven Design
 
@@ -42,7 +39,7 @@ Applies to all Python code under `src/` and `tests/`. See
 
 - All backend source lives under `src/<python_module>/`; test files mirror
   that tree under `tests/`.
-- Follow `.claude/rules/tech.md` for language version, dependency
+- Follow `.opencode/rules/tech.md` for language version, dependency
   management, testing, and linting/type-checking tools. Don't introduce a
   package not listed there without asking first.
 - New runtime dependencies get added to the table in `tech.md`, with the
