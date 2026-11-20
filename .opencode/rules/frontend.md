@@ -1,12 +1,10 @@
----
-paths:
-  - "frontend/src/**/*"
----
-
 # Frontend Rules
 
+> **Scope:** these rules apply to files matching frontend/src/**/*.
+> (OpenCode loads every rule file globally; ignore this file for other paths.)
+
 Applies to all code under `frontend/src/`. See
-`.claude/rules/structure.md` for the full directory layout.
+`.opencode/rules/structure.md` for the full directory layout.
 
 ## Single Responsibility Principle
 
@@ -22,7 +20,7 @@ Applies to all code under `frontend/src/`. See
   feature's `specs/<feature-name>/design.md` (Application Layer § DTOs and
   API Layer § Endpoints) — don't invent a divergent shape client-side.
 - Domain terminology used in component/prop/state names should match the
-  glossary in `.claude/rules/product.md` and the entity/value-object names
+  glossary in `.opencode/rules/product.md` and the entity/value-object names
   in the relevant design.md, so the same concept isn't named two different
   ways across backend and frontend.
 

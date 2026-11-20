@@ -4,8 +4,19 @@
 
 ```
 <Project>/
-├── .claude/
+├── .opencode/
+│   ├── commands/                      # one per skill; picks the agent + model, loads the skill
+│   │   ├── spec-new.md
+│   │   ├── spec-requirements.md
+│   │   ├── spec-design.md
+│   │   ├── spec-tasks.md
+│   │   ├── implement-task.md
+│   │   └── review.md
 │   ├── skills/
+│   │   ├── domain-model/
+│   │   │   └── SKILL.md
+│   │   ├── spec-new/
+│   │   │   └── SKILL.md
 │   │   ├── spec-requirements/
 │   │   │   ├── SKILL.md
 │   │   │   └── template.md            # requirements.md template
@@ -19,14 +30,22 @@
 │   │   │   └── SKILL.md
 │   │   └── review/
 │   │       └── SKILL.md
-│   ├── rules/                         # project-wide steering & restrictions
-│   │   ├── sdd-workflow.md            # phase-gate rules (no skipping phases, etc.)
-│   │   ├── product.md                 # what/why — Kiro-style steering doc
-│   │   ├── tech.md                    # tech steering/constraints (Q3)
-│   │   ├── structure.md               # repo conventions, naming, layering
-│   │   ├── backend.md                 # path-scoped: src/**/*.py
-│   │   └── frontend.md                # path-scoped: frontend/src/**/*
-│   └── CLAUDE.md                      # short, top-level index/entry point
+│   └── rules/                         # project-wide steering & restrictions (loaded via opencode.json "instructions")
+│       ├── sdd-workflow.md            # phase-gate rules (no skipping phases, etc.)
+│       ├── product.md                 # what/why — Kiro-style steering doc
+│       ├── tech.md                    # tech steering/constraints (Q3)
+│       ├── structure.md               # repo conventions, naming, layering
+│       ├── domain-driven-design.md    # DDD pattern & layering rules
+│       ├── solid-principles.md        # SRP rules
+│       ├── testing.md                 # testing strategy (Playwright for UI)
+│       ├── backend.md                 # scoped: src/**/*.py, tests/**/*.py
+│       └── frontend.md                # scoped: frontend/src/**/*
+├── AGENTS.md                          # short, top-level index/entry point
+├── opencode.json                      # instructions, permissions, per-phase agents
+├── docs/
+│   └── domain/
+│       ├── glossary.md                # ubiquitous language
+│       └── bounded-contexts.md        # bounded context map
 ├── frontend/
 │   ├── public/                    # for images referenced by path/URL, not imported in components
 │   ├── src/
@@ -76,4 +95,4 @@
   own modules, not inline in components — see `frontend.md`
 - Test files mirror the backend source tree
 - One spec directory per feature — specs are never shared across features
-- Steering documents live under `.claude/rules/`
+- Steering documents live under `.opencode/rules/`
