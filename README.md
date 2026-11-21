@@ -94,7 +94,7 @@ remain the single source of truth:
 
 | Command | Agent | Model | What the agent may change |
 |---------|-------|-------|---------------------------|
-| `/spec-new` | `sdd-spec-new` | `anthropic/claude-haiku-5-5` | `specs/**`; shell limited to `mkdir`, `cp`, `ls`, `test` |
+| `/spec-new` | `sdd-spec-new` | `anthropic/claude-haiku-5-5` | `specs/**`; no shell |
 | `/spec-requirements` | `sdd-requirements` | `anthropic/claude-sonnet-5-5` | `specs/*/requirements.md` only; no shell |
 | `/spec-design` | `sdd-design` | `anthropic/claude-opus-5-5` | `specs/*/design.md`, `docs/domain/glossary.md`, `docs/domain/bounded-contexts.md`; no shell |
 | `/spec-tasks` | `sdd-tasks` | `anthropic/claude-sonnet-5-5` | `specs/*/tasks.md` only; no shell |
@@ -107,5 +107,53 @@ remain the single source of truth:
   `instructions` entry in `opencode.json`.
 - `specs/**/prompt(s).txt` cannot be read, and the built-in `browser` tool
   and any `claude-in-chrome` MCP tools are denied.
-- To use different models, edit the `model:` line in each command file
-  (format `provider/model`, optionally `#variant`).
+
+## Changing the model for a command
+
+Each command sets its model in the `model:` field of its own file's
+frontmatter in `.opencode/commands/`. Skills have no model setting of their
+own. A skill runs on whatever model the command that inlines it uses, so to
+change the model for a skill, edit its command:
+
+| Command / skill | File to edit |
+|-----------------|--------------|
+| `/spec-new` | `.opencode/commands/spec-new.md` |
+| `/spec-requirements` | `.opencode/commands/spec-requirements.md` |
+| `/spec-design` | `.opencode/commands/spec-design.md` |
+| `/spec-tasks` | `.opencode/commands/spec-tasks.md` |
+| `/implement-task` | `.opencode/commands/implement-task.md` |
+| `/review` | `.opencode/commands/review.md` |
+
+For example, to run the design phase on Sonnet instead of Opus, change
+`.opencode/commands/spec-design.md`:
+
+```diff
+ ---
+ description: SDD - Generate design.md (DDD domain model + layered design) for a feature
+ agent: sdd-design
+-model: anthropic/claude-opus-5-5
++model: anthropic/claude-sonnet-5-5
+ subagent: false
+ ---
+```
+
+Notes:
+
+- **Format:** `provider/model`, for example `anthropic/claude-sonnet-5-5`
+  or `openai/gpt-5`. If the model offers variants (such as reasoning-effort
+  levels), you can pick one by adding `#variant`, for example
+  `anthropic/claude-opus-5-5#high`.
+- **Finding valid IDs:** run `opencode models` to list the models your
+  configured providers offer. You can add an optional provider filter, for
+  example `opencode models anthropic`. The provider must be set up first,
+  for example with `opencode auth login`.
+- **Only change `model:`.** Leave the `agent:` line as it is. The agent
+  (defined under `agents` in `opencode.json`) controls what each phase may
+  edit and run, so changing the model keeps those restrictions in place.
+- **Using one model everywhere:** delete the `model:` line from a command
+  file. That command then uses the model currently selected in your
+  OpenCode session (or the top-level `model` in `opencode.json`).
+- Changes take effect the next time you run the command. If a command
+  still uses the old model, restart OpenCode.
+- After changing a model, update the **Model** column in the table above
+  so the README still matches the commands.

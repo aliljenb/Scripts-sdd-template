@@ -26,11 +26,7 @@
         { "action": "skill", "resource": "spec-new", "effect": "allow" },
         { "action": "edit", "resource": "*", "effect": "deny" },
         { "action": "edit", "resource": "*specs/*", "effect": "allow" },
-        { "action": "shell", "resource": "*", "effect": "deny" },
-        { "action": "shell", "resource": "mkdir *", "effect": "allow" },
-        { "action": "shell", "resource": "cp *", "effect": "allow" },
-        { "action": "shell", "resource": "test *", "effect": "allow" },
-        { "action": "shell", "resource": "ls *", "effect": "allow" }
+        { "action": "shell", "resource": "*", "effect": "deny" }
       ]
     },
 
