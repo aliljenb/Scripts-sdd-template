@@ -1,31 +1,29 @@
 # Frontend Rules
 
-> **Scope:** these rules apply to files matching frontend/src/**/*.
-> (OpenCode loads every rule file globally; ignore this file for other paths.)
-
-Applies to all code under `frontend/src/`. See
+Code-level conventions for everything under `frontend/src/`. The SRP
+principles behind them live in `.opencode/rules/solid-principles.md`. See
 `.opencode/rules/structure.md` for the full directory layout.
 
-## Single Responsibility Principle
+## Component structure
 
-- One component, one job. A component that both fetches/owns data and
-  renders a non-trivial view should usually be split into a container
-  (data/state) and a presentational component (rendering).
-- Keep API access, state management, and presentation in separate
-  modules/files rather than inline in a single large component.
+- Split a component that both fetches/owns data and renders a
+  non-trivial view into a container (data/state) and a presentational
+  component (rendering).
+- Keep API access, state management and presentation in separate
+  modules/files rather than inline in one large component.
 
-## Domain alignment
+## Alignment with the backend
 
-- Frontend types/DTOs for a feature should mirror the DTOs defined in that
+- Frontend types/DTOs for a feature mirror the DTOs defined in that
   feature's `specs/<feature-name>/design.md` (Application Layer § DTOs and
   API Layer § Endpoints) — don't invent a divergent shape client-side.
-- Domain terminology used in component/prop/state names should match the
-  glossary in `.opencode/rules/product.md` and the entity/value-object names
-  in the relevant design.md, so the same concept isn't named two different
-  ways across backend and frontend.
+- Domain terms in component, prop and state names match
+  `docs/domain/glossary.md` and the entity/value-object names in the
+  relevant design.md, so a concept isn't named two ways across backend
+  and frontend.
 
-## Conventions
+## Project conventions
 
-- All frontend source lives under `frontend/src/`; `frontend/package.json`
-  is the single source of truth for dependencies — don't add a package
-  without checking it's actually needed and updating that file.
+- `frontend/package.json` is the single source of truth for dependencies
+  — don't add a package without checking it's actually needed and
+  updating that file.

@@ -1,46 +1,43 @@
 # Backend Rules
 
-> **Scope:** these rules apply to files matching src/**/*.py, tests/**/*.py.
-> (OpenCode loads every rule file globally; ignore this file for other paths.)
+Code-level conventions for Python under `src/` and `tests/`. The design
+principles behind them live in `.opencode/rules/domain-driven-design.md`
+(layering, when to use which pattern) and
+`.opencode/rules/solid-principles.md` (SRP); those take precedence if
+anything here seems to conflict. See `.opencode/rules/structure.md` for
+the full directory layout and `.opencode/rules/tech.md` for the tooling
+stack.
 
-Applies to all Python code under `src/` and `tests/`. See
-`.opencode/rules/structure.md` for the full directory layout and
-`.opencode/rules/tech.md` for the tooling stack.
+## Where things go
 
-## Domain-Driven Design
+- `src/<python_module>/domain/` imports only the standard library and
+  other domain modules. If a domain file needs anything else, that
+  dependency belongs in `application/` or `infrastructure/`.
+- When the design calls for a building block, give it its own module
+  rather than collapsing several into one `models.py`. Only introduce the
+  building blocks the design justifies (see `domain-driven-design.md`).
+- Repository interfaces (ports) are declared in
+  `domain/<aggregate>/repository.py` as `typing.Protocol` or `abc.ABC`.
+  Concrete adapters live in `infrastructure/repositories/` and depend on
+  the port, never the other way around.
+- Concrete adapters are wired into use cases at the composition root in
+  `api/` (dependency injection), not imported by `application/`.
 
-- `src/<python_module>/domain/` is pure business logic: zero imports from
-  frameworks, ORMs, HTTP libraries, or any other infrastructure package.
-  If a domain file needs to import something outside the standard library
-  or another domain module, stop and reconsider — that dependency almost
-  always belongs in `application/` or `infrastructure/` instead.
-- Model aggregates, entities, value objects, domain events, and domain
-  exceptions explicitly — don't collapse them into a single "models.py".
-  Value objects are immutable; entities have identity; only aggregate
-  roots are referenced from outside their aggregate.
-- Repository interfaces (ports) are declared in `domain/<aggregate>/repository.py`
-  as `Protocol`/`ABC`. Concrete implementations (adapters) live in
-  `infrastructure/repositories/` and depend on the port, never the other
-  way around.
-- `application/` orchestrates domain objects for one use case per
-  command/query. It may depend on domain ports, not on infrastructure
-  implementations directly (wire concrete adapters at the API/composition
-  root instead).
+## Python conventions
 
-## Single Responsibility Principle
+- Value objects are immutable: use `@dataclass(frozen=True)` (or an
+  equivalent) and validate invariants in `__post_init__`.
+- Entities compare by identity: implement `__eq__`/`__hash__` on the ID,
+  not on attribute values.
+- Domain errors are explicit exception classes in the domain layer, not
+  bare `ValueError`/`Exception`.
+- All code is fully type-annotated and must pass `mypy` and `ruff` as
+  configured in `tech.md`.
 
-- One class/function, one reason to change. If you're writing "and" to
-  describe what a class does, split it.
-- Prefer several small, well-named modules over one large one. A module
-  that mixes persistence, validation, and business rules should be split
-  along those lines into infrastructure/domain/application respectively.
+## Project conventions
 
-## Conventions
-
-- All backend source lives under `src/<python_module>/`; test files mirror
-  that tree under `tests/`.
-- Follow `.opencode/rules/tech.md` for language version, dependency
-  management, testing, and linting/type-checking tools. Don't introduce a
-  package not listed there without asking first.
-- New runtime dependencies get added to the table in `tech.md`, with the
+- All backend source lives under `src/<python_module>/`; test files
+  mirror that tree under `tests/`.
+- Don't introduce a package not listed in `tech.md` without asking first.
+  New runtime dependencies get added to the table in `tech.md`, with the
   reasoning noted in its Decision log.

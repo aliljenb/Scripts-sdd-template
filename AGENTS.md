@@ -39,8 +39,9 @@ Read these before working in this repo:
 - `.opencode/rules/solid-principles.md` — SRP rules
 
 All files in `.opencode/rules/` are loaded automatically through the
-`instructions` entry in `opencode.json`. `backend.md` and `frontend.md`
-apply only to the paths named in their Scope line.
+`instructions` entry in `opencode.json`. Design principles (DDD, SRP)
+live in `domain-driven-design.md` and `solid-principles.md`; `backend.md`
+and `frontend.md` hold only code-level conventions and defer to them.
 
 ## Enforcement
 

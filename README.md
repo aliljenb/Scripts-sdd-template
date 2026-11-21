@@ -78,7 +78,8 @@ mypy).
 ## Getting started
 
 1. Fill in `.opencode/rules/product.md` with the product you're actually
-   building (vision, users, goals, glossary) — the agent reads this before
+   building (vision, users, goals); domain terms go in
+   `docs/domain/glossary.md` — the agent reads this before
    drafting requirements or design so it doesn't invent product intent.
 2. Update `.opencode/rules/tech.md` if the stack differs from the defaults.
 3. Run `/spec-new <feature-name>` to start your first feature.

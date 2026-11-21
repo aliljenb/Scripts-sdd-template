@@ -31,10 +31,5 @@
 
 ## Glossary
 
-<!-- Domain terms/ubiquitous language shared between product and code.
-     Keep this in sync with the domain model in specs/*/design.md —
-     entity/aggregate names should match the terms used here. -->
-
-| Term | Meaning |
-|------|---------|
-|      |         |
+The project's ubiquitous language lives in `docs/domain/glossary.md` —
+add and define domain terms there, not here.
