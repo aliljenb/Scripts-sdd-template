@@ -1,7 +1,7 @@
 ---
 description: SDD - Generate requirements.md for a new feature or bugfix.md for a bug
 agent: sdd-requirements
-model: anthropic/claude-sonnet-5-5
+model: anthropic/claude-opus-5-5
 subagent: false
 ---
 

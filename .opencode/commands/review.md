@@ -2,7 +2,7 @@
 description: SDD - Review a feature's implementation against its approved spec
 agent: sdd-review
 model: anthropic/claude-opus-5-5
-subagent: false
+subagent: true
 ---
 
 Feature name (`<feature-name>`): `$1`

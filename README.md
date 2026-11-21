@@ -95,7 +95,7 @@ remain the single source of truth:
 | Command | Agent | Model | What the agent may change |
 |---------|-------|-------|---------------------------|
 | `/spec-new` | `sdd-spec-new` | `anthropic/claude-haiku-5-5` | `specs/**`; no shell |
-| `/spec-requirements` | `sdd-requirements` | `anthropic/claude-sonnet-5-5` | `specs/*/requirements.md` only; no shell |
+| `/spec-requirements` | `sdd-requirements` | `anthropic/claude-opus-5-5` | `specs/*/requirements.md` only; no shell |
 | `/spec-design` | `sdd-design` | `anthropic/claude-opus-5-5` | `specs/*/design.md`, `docs/domain/glossary.md`, `docs/domain/bounded-contexts.md`; no shell |
 | `/spec-tasks` | `sdd-tasks` | `anthropic/claude-sonnet-5-5` | `specs/*/tasks.md` only; no shell |
 | `/implement-task` | `sdd-implement` | `anthropic/claude-sonnet-5-5` | any file; `pytest`, `ruff`, `mypy`, `git` pre-approved, other shell asks |
