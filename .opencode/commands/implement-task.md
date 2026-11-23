@@ -1,7 +1,7 @@
 ---
 description: SDD - Implement task(s) from a feature's approved tasks.md
 agent: sdd-implement
-model: anthropic/claude-sonnet-5-5
+model: anthropic/claude-sonnet-5
 subagent: false
 ---
 

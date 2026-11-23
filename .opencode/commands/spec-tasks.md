@@ -1,7 +1,7 @@
 ---
 description: SDD - Generate tasks.md, a file-by-file implementation checklist derived from design.md
 agent: sdd-tasks
-model: anthropic/claude-sonnet-5-5
+model: anthropic/claude-sonnet-5
 subagent: false
 ---
 

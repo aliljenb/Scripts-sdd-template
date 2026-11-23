@@ -1,7 +1,7 @@
 ---
 description: SDD - Generate design.md (DDD domain model + layered design) for a feature
 agent: sdd-design
-model: anthropic/claude-opus-5-5
+model: anthropic/claude-opus-5
 subagent: false
 ---
 

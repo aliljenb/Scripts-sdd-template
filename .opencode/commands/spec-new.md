@@ -1,7 +1,7 @@
 ---
 description: SDD - Set up a new feature spec folder from the templates
 agent: sdd-spec-new
-model: anthropic/claude-haiku-5-5
+model: anthropic/claude-haiku-5
 subagent: false
 ---
 
