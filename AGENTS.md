@@ -22,38 +22,38 @@ the next phase's command may run.
    approved plan
 6. `/review <feature-name>` — check the implementation against the spec
 
-Full phase-gate rules: `.opencode/rules/sdd-workflow.md`.
+Full phase-gate rules: `.github/instructions/sdd-workflow.instructions.md`.
 
 ## Rules
 
 Read these before working in this repo:
 
-- `.opencode/rules/product.md` — what this product is and why (fill in per project)
-- `.opencode/rules/tech.md` — approved stack; ask before adding anything not listed
-- `.opencode/rules/structure.md` — repo layout and DDD directory conventions
-- `.opencode/rules/sdd-workflow.md` — phase-gate rules
-- `.opencode/rules/backend.md` — DDD/SRP rules for `src/**/*.py`
-- `.opencode/rules/frontend.md` — SRP rules for `frontend/src/**/*`
-- `.opencode/rules/testing.md` — testing strategy, including Playwright for applicable UI tests
-- `.opencode/rules/domain-driven-design.md` — when to use which DDD pattern; layering
-- `.opencode/rules/solid-principles.md` — SRP rules
+- `.github/instructions/product.instructions.md` — what this product is and why (fill in per project)
+- `.github/instructions/tech.instructions.md` — approved stack; ask before adding anything not listed
+- `.github/instructions/structure.instructions.md` — repo layout and DDD directory conventions
+- `.github/instructions/sdd-workflow.instructions.md` — phase-gate rules
+- `.github/instructions/backend.instructions.md` — DDD/SRP rules for `src/**/*.py`
+- `.github/instructions/frontend.instructions.md` — SRP rules for `frontend/src/**/*`
+- `.github/instructions/testing.instructions.md` — testing strategy, including Playwright for applicable UI tests
+- `.github/instructions/domain-driven-design.instructions.md` — when to use which DDD pattern; layering
+- `.github/instructions/solid-principles.instructions.md` — SRP rules
 
-All files in `.opencode/rules/` are loaded automatically through the
-`instructions` entry in `opencode.json`. Design principles (DDD, SRP)
-live in `domain-driven-design.md` and `solid-principles.md`; `backend.md`
-and `frontend.md` hold only code-level conventions and defer to them.
+These files are loaded automatically by every supported tool (OpenCode,
+Claude Code, GitHub Copilot, Kiro). Design principles (DDD, SRP) live in
+`domain-driven-design` and `solid-principles`; `backend` and `frontend`
+hold only code-level conventions, defer to them, and are scoped to their
+paths where the tool supports it.
 
 ## Enforcement
 
-Each workflow command (`.opencode/commands/*.md`) runs under its own
-agent and model, and inlines the skill of the same name from
-`.opencode/skills/` into the prompt (via `!`cat …``), so the skill's
-instructions are always present before the agent starts. The phase skills (`spec-new`,
-`spec-requirements`, `spec-design`, `spec-tasks`, `implement-task`,
-`review`) are denied to every other agent, so they only run when the
-user types the command. Each phase agent's permissions restrict which
-files it may edit and which shell commands it may run; do not try to
-work around a denied permission — stop and tell the user instead.
+The six phase skills live in `.claude/skills/` and are shared by all
+tools. They are marked user-invoked only, so they run when the user types
+the command, not because an agent decided to. Each phase runs under its
+own per-phase agent, which sets the model and, where the tool supports it,
+restricts which files may be edited and which shell commands may run. Do
+not try to work around a denied permission. Where a tool cannot enforce a
+restriction, the phase skill's "Only write to" rule still applies: if a
+phase seems to need a change outside it, stop and tell the user instead.
 
 ## Principles
 

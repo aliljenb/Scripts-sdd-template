@@ -11,4 +11,4 @@ If the feature name is empty, ask the user for it instead of guessing.
 
 The `review` skill is included below. Follow its instructions exactly.
 
-!`cat .opencode/skills/review/SKILL.md`
+!`cat .claude/skills/review/SKILL.md`

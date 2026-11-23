@@ -11,4 +11,4 @@ If the feature name is empty, ask the user for it instead of guessing.
 
 The `spec-design` skill is included below. Follow its instructions exactly.
 
-!`cat .opencode/skills/spec-design/SKILL.md`
+!`cat .claude/skills/spec-design/SKILL.md`
