@@ -14,6 +14,9 @@ the next phase's command may run.
 1. `/spec-new <feature-name>` — scaffold `specs/<feature-name>/`
 2. `/spec-requirements <feature-name>` — write user stories + acceptance
    criteria
+   - `/review-requirements <feature-name>` (optional) — read-only review
+     of requirements.md for ambiguities, missing cases, conflicts and
+     untestable criteria; fixes go back through `/spec-requirements`
 3. `/spec-design <feature-name>` — write the DDD domain model and layered
    design
 4. `/spec-tasks <feature-name>` — break the design into a file-by-file
@@ -46,7 +49,7 @@ paths where the tool supports it.
 
 ## Enforcement
 
-The six phase skills live in `.claude/skills/` and are shared by both
+The seven phase skills live in `.claude/skills/` and are shared by both
 tools. They are marked user-invoked only, so they run when the user types
 the command, not because an agent decided to. Each phase sets its own
 model: in Claude Code through the skill's `model:`, in Kiro through a

@@ -9,6 +9,7 @@
 │   │   ├── domain-model/SKILL.md
 │   │   ├── spec-new/SKILL.md
 │   │   ├── spec-requirements/         # SKILL.md + template.md (requirements.md template)
+│   │   ├── review-requirements/SKILL.md
 │   │   ├── spec-design/               # SKILL.md + template.md (design.md template)
 │   │   ├── spec-tasks/                # SKILL.md + template.md (tasks.md template)
 │   │   ├── implement-task/SKILL.md
