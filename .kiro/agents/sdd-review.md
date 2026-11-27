@@ -4,15 +4,15 @@ description: 'SDD: read-only audit of an implementation against its spec. Used b
 model: claude-opus-5
 tools: ["read", "glob", "grep", "shell"]
 resources:
-  - file://.github/instructions/product.instructions.md
-  - file://.github/instructions/tech.instructions.md
-  - file://.github/instructions/structure.instructions.md
-  - file://.github/instructions/sdd-workflow.instructions.md
-  - file://.github/instructions/domain-driven-design.instructions.md
-  - file://.github/instructions/solid-principles.instructions.md
-  - file://.github/instructions/testing.instructions.md
-  - file://.github/instructions/backend.instructions.md
-  - file://.github/instructions/frontend.instructions.md
+  - file://.claude/rules/product.md
+  - file://.claude/rules/tech.md
+  - file://.claude/rules/structure.md
+  - file://.claude/rules/sdd-workflow.md
+  - file://.claude/rules/domain-driven-design.md
+  - file://.claude/rules/solid-principles.md
+  - file://.claude/rules/testing.md
+  - file://.claude/rules/backend.md
+  - file://.claude/rules/frontend.md
   - file://.claude/skills/review/SKILL.md
   - skill://.claude/skills/domain-model/SKILL.md
 permissions:

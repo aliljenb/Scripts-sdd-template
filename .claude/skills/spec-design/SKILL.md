@@ -31,9 +31,8 @@ before drafting or changing design.md.
 - Ask one question at a time, or a small batch of tightly related ones.
 - Each question must offer 2-4 concrete, mutually exclusive multiple-choice
   options (plus the user can always answer "Other" with free text).
-- Use your tool for clickable multiple-choice questions (`question` in
-  OpenCode, `AskUserQuestion` in Claude Code, `askQuestions` in Copilot). Only fall
-  back to a lettered list (A/B/C/D) in chat if that tool isn't available.
+- Use your tool for clickable multiple-choice questions (`AskUserQuestion` in
+  Claude Code). Only fall back to a lettered list (A/B/C/D) in chat if that tool isn't available.
 - Do not proceed to writing or editing design.md until blocking ambiguities
   are resolved. Minor, non-blocking assumptions can just be stated inline
   in the design instead of asked about.
@@ -48,7 +47,7 @@ This project practices DDD. Every design.md must:
   the requirements don't support.
 - Identify aggregates and their roots, and keep aggregate boundaries small
   — one aggregate per transactional consistency boundary, per
-  `.github/instructions/structure.instructions.md`'s domain/application/infrastructure/api
+  `.claude/rules/structure.md`'s domain/application/infrastructure/api
   layering.
 - Keep the domain model free of framework or infrastructure concerns
   (no ORM, no HTTP, no I/O) — those belong in the Infrastructure and API
@@ -67,7 +66,7 @@ its job, split it before marking design.md Approved.
 
 - Never modify files in `src/` or `frontend/src/` while completing this
   skill — Design phase is planning-only, per
-  `.github/instructions/sdd-workflow.instructions.md`.
+  `.claude/rules/sdd-workflow.md`.
 - Only write to `specs/<feature-name>/design.md`, `docs/domain/glossary.md` and `docs/domain/bounded-contexts.md`.
 
 Read the file `specs/<feature-name>/design.md` and help me create or refine the design.

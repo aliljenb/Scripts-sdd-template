@@ -28,7 +28,7 @@ Read `specs/<feature-name>/design.md` in full and derive tasks directly from it:
 
 - Every entity, value object, event, exception, and repository interface
   in the Domain Model section becomes a task naming its exact file path
-  (per `.github/instructions/structure.instructions.md`'s layout) and the class/function it
+  (per `.claude/rules/structure.md`'s layout) and the class/function it
   implements.
 - Every command/query/DTO in the Application Layer section becomes a task
   the same way, and so on for Infrastructure, API, and Frontend sections.

@@ -21,9 +21,8 @@ or changing requirements.md.
 - Ask one question at a time, or a small batch of tightly related ones.
 - Each question must offer 2-4 concrete, mutually exclusive multiple-choice
   options (plus the user can always answer "Other" with free text).
-- Use your tool for clickable multiple-choice questions (`question` in
-  OpenCode, `AskUserQuestion` in Claude Code, `askQuestions` in Copilot). Only fall
-  back to a lettered list (A/B/C/D) in chat if that tool isn't available.
+- Use your tool for clickable multiple-choice questions (`AskUserQuestion` in
+  Claude Code). Only fall back to a lettered list (A/B/C/D) in chat if that tool isn't available.
 - Do not proceed to writing or editing requirements.md until blocking
   ambiguities are resolved. Minor, non-blocking assumptions can just be
   stated inline in the requirement instead of asked about.

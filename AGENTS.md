@@ -22,37 +22,37 @@ the next phase's command may run.
    approved plan
 6. `/review <feature-name>` — check the implementation against the spec
 
-Full phase-gate rules: `.github/instructions/sdd-workflow.instructions.md`.
+Full phase-gate rules: `.claude/rules/sdd-workflow.md`.
 
 ## Rules
 
 Read these before working in this repo:
 
-- `.github/instructions/product.instructions.md` — what this product is and why (fill in per project)
-- `.github/instructions/tech.instructions.md` — approved stack; ask before adding anything not listed
-- `.github/instructions/structure.instructions.md` — repo layout and DDD directory conventions
-- `.github/instructions/sdd-workflow.instructions.md` — phase-gate rules
-- `.github/instructions/backend.instructions.md` — DDD/SRP rules for `src/**/*.py`
-- `.github/instructions/frontend.instructions.md` — SRP rules for `frontend/src/**/*`
-- `.github/instructions/testing.instructions.md` — testing strategy, including Playwright for applicable UI tests
-- `.github/instructions/domain-driven-design.instructions.md` — when to use which DDD pattern; layering
-- `.github/instructions/solid-principles.instructions.md` — SRP rules
+- `.claude/rules/product.md` — what this product is and why (fill in per project)
+- `.claude/rules/tech.md` — approved stack; ask before adding anything not listed
+- `.claude/rules/structure.md` — repo layout and DDD directory conventions
+- `.claude/rules/sdd-workflow.md` — phase-gate rules
+- `.claude/rules/backend.md` — DDD/SRP rules for `src/**/*.py`
+- `.claude/rules/frontend.md` — SRP rules for `frontend/src/**/*`
+- `.claude/rules/testing.md` — testing strategy, including Playwright for applicable UI tests
+- `.claude/rules/domain-driven-design.md` — when to use which DDD pattern; layering
+- `.claude/rules/solid-principles.md` — SRP rules
 
-These files are loaded automatically by every supported tool (OpenCode,
-Claude Code, GitHub Copilot, Kiro). Design principles (DDD, SRP) live in
+These files are loaded automatically by both supported tools (Claude
+Code, Kiro). Design principles (DDD, SRP) live in
 `domain-driven-design` and `solid-principles`; `backend` and `frontend`
 hold only code-level conventions, defer to them, and are scoped to their
 paths where the tool supports it.
 
 ## Enforcement
 
-The six phase skills live in `.claude/skills/` and are shared by all
+The six phase skills live in `.claude/skills/` and are shared by both
 tools. They are marked user-invoked only, so they run when the user types
-the command, not because an agent decided to. Each phase runs under its
-own per-phase agent, which sets the model and, where the tool supports it,
-restricts which files may be edited and which shell commands may run. Do
-not try to work around a denied permission. Where a tool cannot enforce a
-restriction, the phase skill's "Only write to" rule still applies: if a
+the command, not because an agent decided to. Each phase sets its own
+model: in Claude Code through the skill's `model:`, in Kiro through a
+per-phase agent that also restricts which files may be edited and which
+shell commands may run. Do not try to work around a denied permission.
+Where a tool cannot enforce a restriction (Claude Code), the phase skill's "Only write to" rule still applies: if a
 phase seems to need a change outside it, stop and tell the user instead.
 
 ## Principles

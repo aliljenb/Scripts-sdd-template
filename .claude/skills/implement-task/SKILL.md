@@ -29,7 +29,7 @@ file order, one at a time.
 
 1. Pick the next unchecked task (or the one named by `<task>`).
 2. Implement exactly what it describes, in the exact file it names, per
-   `.github/instructions/structure.instructions.md`'s layout:
+   `.claude/rules/structure.md`'s layout:
    - `domain/` code must stay free of framework/infrastructure imports.
    - `application/` code orchestrates domain objects only — no direct
      ORM/HTTP/I/O calls; those go through repository ports.

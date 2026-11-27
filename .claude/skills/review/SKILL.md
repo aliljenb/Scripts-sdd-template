@@ -26,7 +26,7 @@ code or spec files.
 2. **Requirements coverage** — every acceptance criterion in
    requirements.md should be traceable to at least one task/test. Flag
    gaps.
-3. **DDD layering purity**, per `.github/instructions/structure.instructions.md`:
+3. **DDD layering purity**, per `.claude/rules/structure.md`:
    - `domain/` files must import no framework/infrastructure packages
      (no ORM, no HTTP client, no framework request/response types).
    - `application/` files must not talk to the database/HTTP directly —

@@ -4,8 +4,8 @@ description: 'SDD: scaffolds a new specs/<feature-name>/ folder. Used by /spec-n
 model: claude-haiku-5
 tools: ["read", "glob", "grep", "write"]
 resources:
-  - file://.github/instructions/structure.instructions.md
-  - file://.github/instructions/sdd-workflow.instructions.md
+  - file://.claude/rules/structure.md
+  - file://.claude/rules/sdd-workflow.md
   - file://.claude/skills/spec-new/SKILL.md
 permissions:
   rules:

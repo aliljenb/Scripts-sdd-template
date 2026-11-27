@@ -4,10 +4,10 @@ description: 'SDD: writes specs/<feature-name>/requirements.md (user stories + a
 model: claude-opus-5
 tools: ["read", "glob", "grep", "write"]
 resources:
-  - file://.github/instructions/product.instructions.md
-  - file://.github/instructions/tech.instructions.md
-  - file://.github/instructions/structure.instructions.md
-  - file://.github/instructions/sdd-workflow.instructions.md
+  - file://.claude/rules/product.md
+  - file://.claude/rules/tech.md
+  - file://.claude/rules/structure.md
+  - file://.claude/rules/sdd-workflow.md
   - file://.claude/skills/spec-requirements/SKILL.md
 permissions:
   rules:

@@ -1,8 +1,8 @@
 # sdd-template
 
 A template for Spec-Driven Development (SDD), in the style of AWS Kiro, that
-works with [OpenCode](https://opencode.ai), [Claude Code](https://claude.com/claude-code),
-[GitHub Copilot](https://github.com/features/copilot) and [Kiro CLI](https://kiro.dev). It scaffolds a Python (backend) / React (frontend)
+works with [Claude Code](https://claude.com/claude-code) and
+[Kiro CLI](https://kiro.dev). It scaffolds a Python (backend) / React (frontend)
 project where every feature moves through an explicit, phase-gated
 workflow — requirements → design → tasks → implementation → review —
 and the backend is built following Domain-Driven Design (DDD) with strict
@@ -43,8 +43,8 @@ Backend code is organized into DDD layers, each with one job:
 
 Every design and its implementation are checked against the Single
 Responsibility Principle — each module/class should have exactly one
-reason to change. See `.github/instructions/backend.instructions.md` and
-`.github/instructions/frontend.instructions.md` for the enforced conventions.
+reason to change. See `.claude/rules/backend.md` and
+`.claude/rules/frontend.md` for the enforced conventions.
 
 ## Project structure
 
@@ -52,19 +52,13 @@ reason to change. See `.github/instructions/backend.instructions.md` and
 <Project>/
 ├── .claude/
 │   ├── skills/           # shared: one skill per phase (+ domain-model)
-│   ├── rules ->          # symlink to .github/instructions (Claude Code)
+│   ├── rules/            # shared: steering docs & phase-gate rules
 │   └── settings.json     # Claude Code permissions
-├── .github/
-│   ├── instructions/     # shared: steering docs & phase-gate rules
-│   └── agents/           # Copilot: per-phase agents
 ├── .kiro/
 │   ├── agents/           # Kiro: per-phase agents
 │   └── prompts/          # Kiro: slash commands
-├── .opencode/
-│   └── commands/         # OpenCode: slash commands
 ├── AGENTS.md             # tool-neutral entry point / index
 ├── CLAUDE.md             # imports AGENTS.md for Claude Code
-├── opencode.json         # OpenCode: rule loading, permissions, per-phase agents
 ├── frontend/
 │   └── src/
 ├── specs/
@@ -80,17 +74,17 @@ reason to change. See `.github/instructions/backend.instructions.md` and
 └── tests/
 ```
 
-See `.github/instructions/structure.instructions.md` for the full layout and conventions, and
-`.github/instructions/tech.instructions.md` for the stack (Python 3.12+, pip, pytest, ruff,
+See `.claude/rules/structure.md` for the full layout and conventions, and
+`.claude/rules/tech.md` for the stack (Python 3.12+, pip, pytest, ruff,
 mypy).
 
 ## Getting started
 
-1. Fill in `.github/instructions/product.instructions.md` with the product you're actually
+1. Fill in `.claude/rules/product.md` with the product you're actually
    building (vision, users, goals); domain terms go in
    `docs/domain/glossary.md` — the agent reads this before
    drafting requirements or design so it doesn't invent product intent.
-2. Update `.github/instructions/tech.instructions.md` if the stack differs from the defaults.
+2. Update `.claude/rules/tech.md` if the stack differs from the defaults.
 3. Run `/spec-new <feature-name>` to start your first feature.
 
 ## Shared files and per-tool layers
@@ -100,21 +94,19 @@ maintain:
 
 | Shared file(s) | What it holds | How each tool finds it |
 |---|---|---|
-| `AGENTS.md` | Project index | OpenCode, Copilot and Kiro read it directly; Claude Code through `CLAUDE.md` (`@AGENTS.md`) |
-| `.github/instructions/*.instructions.md` | Rules | OpenCode via `instructions` in `opencode.json`; Copilot natively (`applyTo`); Claude Code via the `.claude/rules` symlink (`paths`); Kiro via each agent's `file://` resources |
-| `.claude/skills/*/SKILL.md` | Phase skills + templates | Claude Code and OpenCode natively; Copilot as `/` commands; Kiro via each agent's resources; OpenCode commands also inline them with `!cat` |
+| `AGENTS.md` | Project index | Kiro reads it directly; Claude Code through `CLAUDE.md` (`@AGENTS.md`) |
+| `.claude/rules/*.md` | Rules | Claude Code natively (`paths` frontmatter scopes `backend` and `frontend`); Kiro via each agent's `file://` resources |
+| `.claude/skills/*/SKILL.md` | Phase skills + templates | Claude Code natively; Kiro via each agent's resources |
 
 Each tool then has a thin layer that picks the model and limits what each
 phase may do:
 
 | | Per-phase model | Per-phase file-write limits | How you run a phase |
 |---|---|---|---|
-| **OpenCode** | `model:` in `.opencode/commands/*.md` | Yes — `agents` permissions in `opencode.json` | `/spec-design <feature>` |
 | **Claude Code** | `model:` in each `SKILL.md` | No — instruction only | `/spec-design <feature>` |
-| **Copilot** | `model:` in `.github/agents/*.agent.md` | No — tools per agent, files by instruction | Select agent `sdd-design`, then `/spec-design <feature>` |
 | **Kiro CLI** | `model:` in `.kiro/agents/*.md` | Yes — `permissions` in each agent | `kiro-cli chat --agent sdd-design`, then `/spec-design <feature>` |
 
-All tools use the same model split:
+Both tools use the same model split:
 
 | Phase | Model tier | Edits allowed | Shell |
 |---|---|---|---|
@@ -125,20 +117,7 @@ All tools use the same model split:
 | `/implement-task` | Sonnet | any file | `pytest`, `ruff`, `mypy`, `git` pre-approved |
 | `/review` | Opus | nothing (read-only) | `pytest`, `ruff`, `mypy`, `git diff`, `git log` pre-approved |
 
-`specs/**/prompt(s).txt` can't be read in OpenCode, Claude Code and Kiro.
-
-## OpenCode
-
-Each command in `.opencode/commands/` selects a dedicated agent and model,
-then inlines the shared skill with shell injection
-(``!`cat .claude/skills/<name>/SKILL.md` ``), so loading it never depends
-on the model choosing to call the `skill` tool. The phase skills are denied
-to every other agent (including `build` and `plan`), and the built-in
-`browser` tool and any `claude-in-chrome` MCP tools are denied.
-
-To change a phase's model, edit `model:` in its command file
-(`provider/model`, optionally `#variant`; run `opencode models` for valid
-IDs). Leave `agent:` alone — it carries the phase's permissions.
+`specs/**/prompt(s).txt` can't be read in Claude Code or Kiro.
 
 ## Claude Code
 
@@ -152,20 +131,6 @@ aliases (`haiku`, `sonnet`, `opus`). Things to know:
   implementer's context.
 - There are no per-phase write limits; the phase skills' "Only write to"
   rules are followed as instructions.
-
-## GitHub Copilot
-
-Pick the phase's agent (`sdd-requirements`, `sdd-design`, …) in the agent
-dropdown, then run the skill as a slash command. The agent sets the model
-and tools; planning agents have no terminal access, and `sdd-review` can't
-edit. Copilot can't limit edits to specific files, so the "Only write to"
-rules are followed as instructions.
-
-- Model names must match what your Copilot plan offers in the model picker;
-  update `model:` in `.github/agents/*.agent.md` if they differ.
-- VS Code's *Copilot* harness looks for skills in `.github/skills/`. If the
-  `/spec-*` commands don't appear there, add a symlink:
-  `ln -s ../.claude/skills .github/skills`.
 
 ## Kiro CLI
 

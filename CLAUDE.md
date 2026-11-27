@@ -2,9 +2,9 @@
 
 ## Claude Code notes
 
-- Rules load from `.claude/rules/`, a symlink to `.github/instructions/`.
-  `backend` and `frontend` rules are path-scoped through their `paths`
-  frontmatter; the rest load every session.
+- Rules load from `.claude/rules/`. `backend` and `frontend` rules are
+  path-scoped through their `paths` frontmatter; the rest load every
+  session.
 - Each phase skill in `.claude/skills/` sets its own model. Claude Code
   applies a skill's model only to the turn that invokes it. For phases with
   back-and-forth (`/spec-requirements`, `/spec-design`), follow-up turns use
