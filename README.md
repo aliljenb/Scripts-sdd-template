@@ -1,7 +1,8 @@
 # sdd-template
 
-A template for Spec-Driven Development (SDD) with [OpenCode](https://opencode.ai),
-in the style of AWS Kiro. It scaffolds a Python (backend) / React (frontend)
+A template for Spec-Driven Development (SDD), in the style of AWS Kiro, that
+works with [OpenCode](https://opencode.ai), [Claude Code](https://claude.com/claude-code),
+[GitHub Copilot](https://github.com/features/copilot) and [Kiro CLI](https://kiro.dev). It scaffolds a Python (backend) / React (frontend)
 project where every feature moves through an explicit, phase-gated
 workflow — requirements → design → tasks → implementation → review —
 and the backend is built following Domain-Driven Design (DDD) with strict
@@ -42,20 +43,28 @@ Backend code is organized into DDD layers, each with one job:
 
 Every design and its implementation are checked against the Single
 Responsibility Principle — each module/class should have exactly one
-reason to change. See `.opencode/rules/backend.md` and
-`.opencode/rules/frontend.md` for the enforced conventions.
+reason to change. See `.github/instructions/backend.instructions.md` and
+`.github/instructions/frontend.instructions.md` for the enforced conventions.
 
 ## Project structure
 
 ```
 <Project>/
+├── .claude/
+│   ├── skills/           # shared: one skill per phase (+ domain-model)
+│   ├── rules ->          # symlink to .github/instructions (Claude Code)
+│   └── settings.json     # Claude Code permissions
+├── .github/
+│   ├── instructions/     # shared: steering docs & phase-gate rules
+│   └── agents/           # Copilot: per-phase agents
+├── .kiro/
+│   ├── agents/           # Kiro: per-phase agents
+│   └── prompts/          # Kiro: slash commands
 ├── .opencode/
-│   ├── commands/         # /spec-new, /spec-requirements, /spec-design,
-│   │                     #   /spec-tasks, /implement-task, /review
-│   ├── skills/           # one skill per command (+ domain-model)
-│   └── rules/            # steering docs & phase-gate rules
-├── AGENTS.md             # entry point / index
-├── opencode.json         # rule loading, permissions, per-phase agents
+│   └── commands/         # OpenCode: slash commands
+├── AGENTS.md             # tool-neutral entry point / index
+├── CLAUDE.md             # imports AGENTS.md for Claude Code
+├── opencode.json         # OpenCode: rule loading, permissions, per-phase agents
 ├── frontend/
 │   └── src/
 ├── specs/
@@ -71,90 +80,106 @@ reason to change. See `.opencode/rules/backend.md` and
 └── tests/
 ```
 
-See `.opencode/rules/structure.md` for the full layout and conventions, and
-`.opencode/rules/tech.md` for the stack (Python 3.12+, pip, pytest, ruff,
+See `.github/instructions/structure.instructions.md` for the full layout and conventions, and
+`.github/instructions/tech.instructions.md` for the stack (Python 3.12+, pip, pytest, ruff,
 mypy).
 
 ## Getting started
 
-1. Fill in `.opencode/rules/product.md` with the product you're actually
+1. Fill in `.github/instructions/product.instructions.md` with the product you're actually
    building (vision, users, goals); domain terms go in
    `docs/domain/glossary.md` — the agent reads this before
    drafting requirements or design so it doesn't invent product intent.
-2. Update `.opencode/rules/tech.md` if the stack differs from the defaults.
+2. Update `.github/instructions/tech.instructions.md` if the stack differs from the defaults.
 3. Run `/spec-new <feature-name>` to start your first feature.
 
-## How the workflow is enforced in OpenCode
+## Shared files and per-tool layers
+
+Everything that defines the workflow is shared, so there is one copy to
+maintain:
+
+| Shared file(s) | What it holds | How each tool finds it |
+|---|---|---|
+| `AGENTS.md` | Project index | OpenCode, Copilot and Kiro read it directly; Claude Code through `CLAUDE.md` (`@AGENTS.md`) |
+| `.github/instructions/*.instructions.md` | Rules | OpenCode via `instructions` in `opencode.json`; Copilot natively (`applyTo`); Claude Code via the `.claude/rules` symlink (`paths`); Kiro via each agent's `file://` resources |
+| `.claude/skills/*/SKILL.md` | Phase skills + templates | Claude Code and OpenCode natively; Copilot as `/` commands; Kiro via each agent's resources; OpenCode commands also inline them with `!cat` |
+
+Each tool then has a thin layer that picks the model and limits what each
+phase may do:
+
+| | Per-phase model | Per-phase file-write limits | How you run a phase |
+|---|---|---|---|
+| **OpenCode** | `model:` in `.opencode/commands/*.md` | Yes — `agents` permissions in `opencode.json` | `/spec-design <feature>` |
+| **Claude Code** | `model:` in each `SKILL.md` | No — instruction only | `/spec-design <feature>` |
+| **Copilot** | `model:` in `.github/agents/*.agent.md` | No — tools per agent, files by instruction | Select agent `sdd-design`, then `/spec-design <feature>` |
+| **Kiro CLI** | `model:` in `.kiro/agents/*.md` | Yes — `permissions` in each agent | `kiro-cli chat --agent sdd-design`, then `/spec-design <feature>` |
+
+All tools use the same model split:
+
+| Phase | Model tier | Edits allowed | Shell |
+|---|---|---|---|
+| `/spec-new` | Haiku | `specs/**` | none |
+| `/spec-requirements` | Opus | `specs/*/requirements.md` | none |
+| `/spec-design` | Opus | `specs/*/design.md`, `docs/domain/glossary.md`, `docs/domain/bounded-contexts.md` | none |
+| `/spec-tasks` | Sonnet | `specs/*/tasks.md` | none |
+| `/implement-task` | Sonnet | any file | `pytest`, `ruff`, `mypy`, `git` pre-approved |
+| `/review` | Opus | nothing (read-only) | `pytest`, `ruff`, `mypy`, `git diff`, `git log` pre-approved |
+
+`specs/**/prompt(s).txt` can't be read in OpenCode, Claude Code and Kiro.
+
+## OpenCode
 
 Each command in `.opencode/commands/` selects a dedicated agent and model,
-then inlines the skill of the same name from `.opencode/skills/` with
-OpenCode's shell injection (``!`cat .opencode/skills/<name>/SKILL.md` ``).
-The skill text is pasted in before the model runs, so loading it never
-depends on the model choosing to call the `skill` tool, and the skill files
-remain the single source of truth:
+then inlines the shared skill with shell injection
+(``!`cat .claude/skills/<name>/SKILL.md` ``), so loading it never depends
+on the model choosing to call the `skill` tool. The phase skills are denied
+to every other agent (including `build` and `plan`), and the built-in
+`browser` tool and any `claude-in-chrome` MCP tools are denied.
 
-| Command | Agent | Model | What the agent may change |
-|---------|-------|-------|---------------------------|
-| `/spec-new` | `sdd-spec-new` | `anthropic/claude-haiku-5-5` | `specs/**`; no shell |
-| `/spec-requirements` | `sdd-requirements` | `anthropic/claude-opus-5-5` | `specs/*/requirements.md` only; no shell |
-| `/spec-design` | `sdd-design` | `anthropic/claude-opus-5-5` | `specs/*/design.md`, `docs/domain/glossary.md`, `docs/domain/bounded-contexts.md`; no shell |
-| `/spec-tasks` | `sdd-tasks` | `anthropic/claude-sonnet-5-5` | `specs/*/tasks.md` only; no shell |
-| `/implement-task` | `sdd-implement` | `anthropic/claude-sonnet-5-5` | any file; `pytest`, `ruff`, `mypy`, `git` pre-approved, other shell asks |
-| `/review` | `sdd-review` | `anthropic/claude-opus-5-5` | nothing (read-only); `pytest`, `ruff`, `mypy`, `git diff`, `git log` pre-approved |
+To change a phase's model, edit `model:` in its command file
+(`provider/model`, optionally `#variant`; run `opencode models` for valid
+IDs). Leave `agent:` alone — it carries the phase's permissions.
 
-- The phase skills are denied to every other agent (including `build` and
-  `plan`), so they only run when you type the command.
-- All rule files in `.opencode/rules/` load on every session via the
-  `instructions` entry in `opencode.json`.
-- `specs/**/prompt(s).txt` cannot be read, and the built-in `browser` tool
-  and any `claude-in-chrome` MCP tools are denied.
+## Claude Code
 
-## Changing the model for a command
+The phase skills are slash commands and set their model with Claude Code
+aliases (`haiku`, `sonnet`, `opus`). Things to know:
 
-Each command sets its model in the `model:` field of its own file's
-frontmatter in `.opencode/commands/`. Skills have no model setting of their
-own. A skill runs on whatever model the command that inlines it uses, so to
-change the model for a skill, edit its command:
+- A skill's `model` applies only to the turn that invokes it. For phases
+  with back-and-forth (`/spec-requirements`, `/spec-design`), use
+  `/model opus` for the session so follow-up turns stay on Opus.
+- `/review` uses `context: fork`, so it runs in a subagent without the
+  implementer's context.
+- There are no per-phase write limits; the phase skills' "Only write to"
+  rules are followed as instructions.
 
-| Command / skill | File to edit |
-|-----------------|--------------|
-| `/spec-new` | `.opencode/commands/spec-new.md` |
-| `/spec-requirements` | `.opencode/commands/spec-requirements.md` |
-| `/spec-design` | `.opencode/commands/spec-design.md` |
-| `/spec-tasks` | `.opencode/commands/spec-tasks.md` |
-| `/implement-task` | `.opencode/commands/implement-task.md` |
-| `/review` | `.opencode/commands/review.md` |
+## GitHub Copilot
 
-For example, to run the design phase on Sonnet instead of Opus, change
-`.opencode/commands/spec-design.md`:
+Pick the phase's agent (`sdd-requirements`, `sdd-design`, …) in the agent
+dropdown, then run the skill as a slash command. The agent sets the model
+and tools; planning agents have no terminal access, and `sdd-review` can't
+edit. Copilot can't limit edits to specific files, so the "Only write to"
+rules are followed as instructions.
 
-```diff
- ---
- description: SDD - Generate design.md (DDD domain model + layered design) for a feature
- agent: sdd-design
--model: anthropic/claude-opus-5-5
-+model: anthropic/claude-sonnet-5-5
- subagent: false
- ---
+- Model names must match what your Copilot plan offers in the model picker;
+  update `model:` in `.github/agents/*.agent.md` if they differ.
+- VS Code's *Copilot* harness looks for skills in `.github/skills/`. If the
+  `/spec-*` commands don't appear there, add a symlink:
+  `ln -s ../.claude/skills .github/skills`.
+
+## Kiro CLI
+
+Start the phase's agent, then run its prompt:
+
+```bash
+kiro-cli chat --agent sdd-design
+> /spec-design my-feature
 ```
 
-Notes:
+Each agent in `.kiro/agents/` loads only the rules its phase needs plus its
+phase skill, and its `permissions` block limits file writes and shell
+commands. The prompts in `.kiro/prompts/` refuse to run under the wrong
+agent. The agents use the CLI V3 `permissions` format.
 
-- **Format:** `provider/model`, for example `anthropic/claude-sonnet-5-5`
-  or `openai/gpt-5`. If the model offers variants (such as reasoning-effort
-  levels), you can pick one by adding `#variant`, for example
-  `anthropic/claude-opus-5-5#high`.
-- **Finding valid IDs:** run `opencode models` to list the models your
-  configured providers offer. You can add an optional provider filter, for
-  example `opencode models anthropic`. The provider must be set up first,
-  for example with `opencode auth login`.
-- **Only change `model:`.** Leave the `agent:` line as it is. The agent
-  (defined under `agents` in `opencode.json`) controls what each phase may
-  edit and run, so changing the model keeps those restrictions in place.
-- **Using one model everywhere:** delete the `model:` line from a command
-  file. That command then uses the model currently selected in your
-  OpenCode session (or the top-level `model` in `opencode.json`).
-- Changes take effect the next time you run the command. If a command
-  still uses the old model, restart OpenCode.
-- After changing a model, update the **Model** column in the table above
-  so the README still matches the commands.
+- Model IDs must match Kiro's model service; check with `/model` and update
+  `model:` in `.kiro/agents/*.md` if they differ.

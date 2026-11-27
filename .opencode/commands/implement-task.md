@@ -12,4 +12,4 @@ If the feature name is empty, ask the user for it instead of guessing.
 
 The `implement-task` skill is included below. Follow its instructions exactly.
 
-!`cat .opencode/skills/implement-task/SKILL.md`
+!`cat .claude/skills/implement-task/SKILL.md`
